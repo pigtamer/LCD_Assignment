@@ -14,7 +14,7 @@ eps = 1E-3
 
 P = 0.99
 
-T_spec = np.linspace(0 + 0.01, 0 + 0.22 , nt)
+T_spec = np.linspace(0 + 0.01, 0 + 0.23 , nt)
 P_res = []
 for kTv in T_spec:
     P_iter = []
