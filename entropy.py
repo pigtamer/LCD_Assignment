@@ -6,7 +6,7 @@ import seaborn as sns
 sns.set()
 #%%
 # k = 0
-nx, nt = 1000, 1000
+nx, nt = 1000, 2000
 
 kTv = 0.01; # temp
 
