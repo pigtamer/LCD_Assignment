@@ -6,7 +6,7 @@ import seaborn as sns
 sns.set()
 #%%
 # k = 0
-nx, nt = 1000, 1000
+nx, nt = 500, 500
 
 eps = 1E-3
 
@@ -34,7 +34,6 @@ for kP in range(len(liP)):
                 deli += np.exp(bk*P)
             P_src = P
             P = nume / deli
-            P_iter.append(P)
             if np.abs(P_src - P) < eps:
                 P_res.append(P)
                 break
