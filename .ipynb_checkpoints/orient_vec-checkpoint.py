@@ -32,7 +32,9 @@ eps_para, eps_vert = 7.3*eps0, 3.6*eps0
 
 deps = eps_para - eps_vert
 
-
+the_0 = 5 * (pi / 180)
+phi_0 = 270 * (pi / 180)
+vol_0 = 10
 h = 1E-6 # 1um
 NUM_GRID = 100
 d = h*NUM_GRID
@@ -42,18 +44,17 @@ q_0 = 2*pi / p_0
 
 #%%
 # ---- init randomly ------
+V_spec = [4, 7, 10]
+V_spec = [10]
 
-# THE = the_0 + 0.01*the_0*rand(NUM_GRID)
-# PHI = phi_0 + 0.01*phi_0*rand(NUM_GRID)
-# VOL = vol_0 + 0.01*vol_0*rand(NUM_GRID)
-the_0, phi_0, vol_0 = 5 * (pi / 180), 10 * (pi / 180), 4
-THE = the_0 * ones(NUM_GRID)
-PHI = phi_0 * ones(NUM_GRID)
-VOL = vol_0 * ones(NUM_GRID)
-THE[0], PHI[0], VOL[0] = the_0, phi_0, vol_0
+THE = the_0*rand(NUM_GRID)
+THE[0] = the_0
+PHI = phi_0*rand(NUM_GRID)
+PHI[0] = phi_0
+VOL = vol_0*rand(NUM_GRID)
+VOL[0] = vol_0
 
-
-THE_NXT, PHI_NXT, VOL_NXT  = THE.copy(), PHI.copy(), VOL.copy()
+THE_NXT, PHI_NXT, VOL_NXT  = THE, PHI, VOL
 
 def f(the):
     return k11*cos(the)**2 + k33*sin(the)**2
@@ -86,7 +87,7 @@ idx = 0
 while True: # -- iterate n
     idx += 1
     # if idx > 1:
-    THE, PHI, VOL = THE_NXT.copy(), PHI_NXT.copy(), VOL_NXT.copy()
+    #     THE, PHI, VOL = THE_NXT, PHI_NXT, VOL_NXT
     for k in range(1, NUM_GRID-1): #update
         # XX_p, XX_n : positive, negative. XX(k+1), XX(k-1)
         the, the_p, the_n = THE[k],THE[k+1],THE[k-1]
@@ -99,6 +100,17 @@ while True: # -- iterate n
 
         VOL_NXT[k] = calc_volt(the, the_p, the_n, vol_p, vol_n, phi_p, phi_n)
 
+        # THE_NXT[k], PHI_NXT[k], VOL_NXT[k] = the, phi, vol
+    # plt.figure()
+    # plt.plot(THE_NXT - THE)
+    # plt.title("THE-")
+    # plt.figure()
+    # plt.plot(PHI_NXT - PHI)
+    # plt.title("PHI-")
+    # plt.figure()
+    # plt.plot(VOL_NXT - VOL)
+    # plt.title("VOL-")
+    # plt.show()
 
     plt.figure()
     plt.plot(THE)
@@ -110,16 +122,15 @@ while True: # -- iterate n
     plt.plot(VOL)
     plt.title("VOL+")
     plt.show()
-
-    # if idx > 5: break
-
     # # print(k, ":", idx, ":", "%5.5f"%abs(the - the_src), ">>", "%5.5f"%abs(phi - phi_src), ">>", "%5.5f"%abs(vol - vol_src))
-    if sum(abs(THE - THE_NXT)) < thres:
-        if sum(abs(PHI - PHI_NXT)) < thres:
-            if sum(abs(VOL - VOL_NXT)) < thres:
-                break
-    if idx > 1000: break
+    # if sum(abs(THE - THE_NXT)) < thres:
+    #     if sum(abs(PHI - PHI_NXT)) < thres:
+    #         if sum(abs(VOL - VOL_NXT)) < thres:
+    #             break
 
+    if idx > 2: break
+# THE[1:-1] = THE_NXT
+# PHI[1:-1] = PHI_NXT
 plt.figure()
 plt.plot(THE_NXT)
 plt.title("THE")
