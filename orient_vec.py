@@ -33,7 +33,7 @@ eps_para, eps_vert = 7.3*eps0, 3.6*eps0
 
 deps = eps_para - eps_vert
 
-h = 1E-5 # 1um
+h = 1E-6 # 1um
 NUM_GRID = 100
 d = h*NUM_GRID
 
@@ -103,10 +103,10 @@ while True: # -- iterate n
         VOL_NXT[k] = calc_volt(the, the_p, the_n, vol_p, vol_n, phi_p, phi_n)
 
     if sum(abs(THE - THE_NXT)) < thres and sum(abs(PHI - PHI_NXT)) < thres and sum(abs(VOL - VOL_NXT)) < thres: break
-    # if idx > 3000: break
+    # if idx > 5000: break
 toc = time.time() - tic
 
-print(">> Summary <<\n| %5.3f s |\n|%4d rds |"%(toc, idx))
+print(">> Summary <<\n| %5.3f s ; %4d rds |\n Init Phi:\t%5.3f, %5.3f (rad)\n      Delta:\t%5.3f, %5.3f (rad)\n"%(toc, idx, PHI[0], PHI[-1], THE[0], THE[-1]))
 
 
 plt.figure()
