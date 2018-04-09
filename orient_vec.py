@@ -3,6 +3,7 @@ from numpy import *
 from numpy.random import *
 import matplotlib.pyplot as plt
 import seaborn as sns
+import time
 
 # --------------------------
 #             ^
@@ -32,7 +33,7 @@ eps_para, eps_vert = 7.3*eps0, 3.6*eps0
 
 deps = eps_para - eps_vert
 
-h = 1E-6 # 1um
+h = 1E-5 # 1um
 NUM_GRID = 100
 d = h*NUM_GRID
 
@@ -41,13 +42,14 @@ q_0 = 2*pi / p_0
 
 #%%
 # ---- init randomly ------
-the_0, phi_0, vol_0 = 5 * (pi / 180), 270 * (pi / 180), 10
+the_0, phi_0, vol_0 = 5 * (pi / 180), 0 * (pi / 180), 4
 
-THE = the_0 + 0.01*the_0*rand(NUM_GRID)
-PHI = phi_0 + 0.01*phi_0*rand(NUM_GRID)
-VOL = vol_0 + 0.01*vol_0*rand(NUM_GRID)
+THE = the_0*rand(NUM_GRID)
+PHI = phi_0*rand(NUM_GRID)
+VOL = vol_0*rand(NUM_GRID)
 THE[0], PHI[0], VOL[0] = the_0, phi_0, vol_0
 THE[-1] = the_0
+PHI[-1] = 90*(pi/180)
 # THE = the_0 * ones(NUM_GRID)
 # PHI = phi_0 * ones(NUM_GRID)
 # VOL = vol_0 * ones(NUM_GRID)
@@ -81,7 +83,7 @@ def calc_volt(the, the_p, the_n, vol_p, vol_n, phi_p, phi_n):
 
 #%%
 # --- iter ----
-
+tic = time.time()
 thres = 1E-6
 idx = 0
 while True: # -- iterate n
@@ -101,15 +103,19 @@ while True: # -- iterate n
         VOL_NXT[k] = calc_volt(the, the_p, the_n, vol_p, vol_n, phi_p, phi_n)
 
     if sum(abs(THE - THE_NXT)) < thres and sum(abs(PHI - PHI_NXT)) < thres and sum(abs(VOL - VOL_NXT)) < thres: break
-    # if idx > 2000: break
+    # if idx > 3000: break
+toc = time.time() - tic
+
+print(">> Summary <<\n| %5.3f s |\n|%4d rds |"%(toc, idx))
+
 
 plt.figure()
 plt.plot(THE_NXT*(180/pi))
-plt.title("THE")
+plt.title("Delta")
 plt.figure()
-plt.plot(PHI_NXT)
-plt.title("PHI")
+plt.plot(PHI_NXT*(180/pi))
+plt.title("Phi")
 plt.figure()
 plt.plot(VOL_NXT)
-plt.title("VOL")
+plt.title("Voltage")
 plt.show()
