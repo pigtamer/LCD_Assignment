@@ -38,20 +38,20 @@ NUM_GRID = 100
 d = h*NUM_GRID
 
 p_0 = d / 0.75
-q_0 = 2*pi / p_0
+q_0 = 1.6E-19
 
 #%%
 # ---- init randomly ------
 the_0, phi_0, vol_0 = 5 * (pi / 180), 270 * (pi / 180), 4
 
-# THE = the_0 + 0.01*the_0*rand(NUM_GRID)
-# PHI = phi_0 + 0.01*phi_0*rand(NUM_GRID)
-# VOL = vol_0 + 0.01*vol_0*rand(NUM_GRID)
-# THE[0], PHI[0], VOL[0] = the_0, phi_0, vol_0
+THE = the_0 + 0.01*the_0*rand(NUM_GRID)
+PHI = phi_0 + 0.01*phi_0*rand(NUM_GRID)
+VOL = vol_0 + 0.01*vol_0*rand(NUM_GRID)
+THE[0], PHI[0], VOL[0] = the_0, phi_0, vol_0
 
-THE = the_0 * ones(NUM_GRID)
-PHI = phi_0 * ones(NUM_GRID)
-VOL = vol_0 * ones(NUM_GRID)
+# THE = the_0 * ones(NUM_GRID)
+# PHI = phi_0 * ones(NUM_GRID)
+# VOL = vol_0 * ones(NUM_GRID)
 
 THE_NXT, PHI_NXT, VOL_NXT  = THE.copy(), PHI.copy(), VOL.copy()
 
@@ -76,7 +76,7 @@ def calc_phi(the, the_p, the_n, vol_p, vol_n, phi_p, phi_n):
     return((0.25 / g(the))*(h*k22*q_0*sin(2*the)*(the_p - the_n) + 2*g(the)*(phi_p + phi_n) + h*dg(the, the_p ,the_n)*(phi_p - phi_n)))
 
 def calc_volt(the, the_p, the_n, vol_p, vol_n, phi_p, phi_n):
-    return((2*(eps_para * sin(the)**2 + eps_vert * cos(the)**2 )*(vol_p - vol_n) + deps*cos(the)*sin(the)*(the_p - the_n)*(vol_p - vol_n)) / (4*(eps_para * sin(the)**2 + eps_vert * cos(the)**2)))
+    return((2*(eps_para * sin(the)**2 + eps_vert * cos(the)**2 )*(vol_p + vol_n) + deps*cos(the)*sin(the)*(the_p - the_n)*(vol_p - vol_n)) / (4*(eps_para * sin(the)**2 + eps_vert * cos(the)**2)))
 
 
 
@@ -102,16 +102,16 @@ while True: # -- iterate n
         VOL_NXT[k] = calc_volt(the, the_p, the_n, vol_p, vol_n, phi_p, phi_n)
 
 
-    plt.figure()
-    plt.plot(THE)
-    plt.title("THE+[%d]"%idx)
-    plt.figure()
-    plt.plot(PHI)
-    plt.title("PHI+[%d]"%idx)
-    plt.figure()
-    plt.plot(VOL)
-    plt.title("VOL+[%d]"%idx)
-    plt.show()
+    # plt.figure()
+    # plt.plot(THE)
+    # plt.title("THE+[%d]"%idx)
+    # plt.figure()
+    # plt.plot(PHI)
+    # plt.title("PHI+[%d]"%idx)
+    # plt.figure()
+    # plt.plot(VOL)
+    # plt.title("VOL+[%d]"%idx)
+    # plt.show()
 
     # if idx > 5: break
 
@@ -120,7 +120,7 @@ while True: # -- iterate n
         if sum(abs(PHI - PHI_NXT)) < thres:
             if sum(abs(VOL - VOL_NXT)) < thres:
                 break
-    if idx > 100: break
+    if idx > 1000: break
 
 plt.figure()
 plt.plot(THE_NXT)
