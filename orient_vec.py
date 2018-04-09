@@ -42,19 +42,21 @@ q_0 = 2*pi / p_0
 
 #%%
 # ---- init randomly ------
+the_0, phi_0, vol_0 = 5 * (pi / 180), 270 * (pi / 180), 4
 
 # THE = the_0 + 0.01*the_0*rand(NUM_GRID)
 # PHI = phi_0 + 0.01*phi_0*rand(NUM_GRID)
 # VOL = vol_0 + 0.01*vol_0*rand(NUM_GRID)
-the_0, phi_0, vol_0 = 5 * (pi / 180), 10 * (pi / 180), 4
+# THE[0], PHI[0], VOL[0] = the_0, phi_0, vol_0
+
 THE = the_0 * ones(NUM_GRID)
 PHI = phi_0 * ones(NUM_GRID)
 VOL = vol_0 * ones(NUM_GRID)
-THE[0], PHI[0], VOL[0] = the_0, phi_0, vol_0
-
 
 THE_NXT, PHI_NXT, VOL_NXT  = THE.copy(), PHI.copy(), VOL.copy()
 
+#%%
+# ---- Assistant Func ----
 def f(the):
     return k11*cos(the)**2 + k33*sin(the)**2
 
@@ -102,13 +104,13 @@ while True: # -- iterate n
 
     plt.figure()
     plt.plot(THE)
-    plt.title("THE+")
+    plt.title("THE+[%d]"%idx)
     plt.figure()
     plt.plot(PHI)
-    plt.title("PHI+")
+    plt.title("PHI+[%d]"%idx)
     plt.figure()
     plt.plot(VOL)
-    plt.title("VOL+")
+    plt.title("VOL+[%d]"%idx)
     plt.show()
 
     # if idx > 5: break
@@ -118,7 +120,7 @@ while True: # -- iterate n
         if sum(abs(PHI - PHI_NXT)) < thres:
             if sum(abs(VOL - VOL_NXT)) < thres:
                 break
-    if idx > 1000: break
+    if idx > 100: break
 
 plt.figure()
 plt.plot(THE_NXT)
