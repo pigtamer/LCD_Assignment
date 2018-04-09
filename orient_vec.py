@@ -32,23 +32,22 @@ eps_para, eps_vert = 7.3*eps0, 3.6*eps0
 
 deps = eps_para - eps_vert
 
-
 h = 1E-6 # 1um
 NUM_GRID = 100
 d = h*NUM_GRID
 
 p_0 = d / 0.75
-q_0 = 1.6E-19
+q_0 = 2*pi / p_0
 
 #%%
 # ---- init randomly ------
-the_0, phi_0, vol_0 = 5 * (pi / 180), 270 * (pi / 180), 4
+the_0, phi_0, vol_0 = 5 * (pi / 180), 270 * (pi / 180), 10
 
 THE = the_0 + 0.01*the_0*rand(NUM_GRID)
 PHI = phi_0 + 0.01*phi_0*rand(NUM_GRID)
 VOL = vol_0 + 0.01*vol_0*rand(NUM_GRID)
 THE[0], PHI[0], VOL[0] = the_0, phi_0, vol_0
-
+THE[-1] = the_0
 # THE = the_0 * ones(NUM_GRID)
 # PHI = phi_0 * ones(NUM_GRID)
 # VOL = vol_0 * ones(NUM_GRID)
@@ -101,29 +100,11 @@ while True: # -- iterate n
 
         VOL_NXT[k] = calc_volt(the, the_p, the_n, vol_p, vol_n, phi_p, phi_n)
 
-
-    # plt.figure()
-    # plt.plot(THE)
-    # plt.title("THE+[%d]"%idx)
-    # plt.figure()
-    # plt.plot(PHI)
-    # plt.title("PHI+[%d]"%idx)
-    # plt.figure()
-    # plt.plot(VOL)
-    # plt.title("VOL+[%d]"%idx)
-    # plt.show()
-
-    # if idx > 5: break
-
-    # # print(k, ":", idx, ":", "%5.5f"%abs(the - the_src), ">>", "%5.5f"%abs(phi - phi_src), ">>", "%5.5f"%abs(vol - vol_src))
-    if sum(abs(THE - THE_NXT)) < thres:
-        if sum(abs(PHI - PHI_NXT)) < thres:
-            if sum(abs(VOL - VOL_NXT)) < thres:
-                break
-    if idx > 1000: break
+    if sum(abs(THE - THE_NXT)) < thres and sum(abs(PHI - PHI_NXT)) < thres and sum(abs(VOL - VOL_NXT)) < thres: break
+    # if idx > 2000: break
 
 plt.figure()
-plt.plot(THE_NXT)
+plt.plot(THE_NXT*(180/pi))
 plt.title("THE")
 plt.figure()
 plt.plot(PHI_NXT)
